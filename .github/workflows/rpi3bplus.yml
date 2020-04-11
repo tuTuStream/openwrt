@@ -13,8 +13,11 @@ on:
   # schedule:
   #   - cron: 30 3 * * 3,6
   push:
-    branches: 
+    branches:
       - master
+  pull_request:
+    types:
+      - synchronize
 
 jobs:
   build:
