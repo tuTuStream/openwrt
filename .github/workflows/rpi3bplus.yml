@@ -231,14 +231,27 @@ jobs:
         run: |
           find ./bin/targets/ -type d -name "packages" | xargs rm -rf {}
           find ./bin/targets/ -type d -name "tar.gz" | xargs rm -rf {}
+      
+      - name: Upload artifact rpi3 firmware factory
+        uses: actions/upload-artifact@master
+        with:
+          name: OpenWrt rpi3 firmware factory image
+          path: ./bin/targets/brcm2708/bcm2710/openwrt-brcm2708-bcm2710-rpi-3-ext4-factory.img.gz
+
+      - name: Upload artifact rpi3 firmware sysupgrade
+        uses: actions/upload-artifact@master
+        with:
+          name: OpenWrt rpi3 firmware sysupgrade image
+          path: ./bin/targets/brcm2708/bcm2710/openwrt-brcm2708-bcm2710-rpi-3-ext4-sysupgrade.img.gz
+      
       - name: Upload artifact firmware
         uses: actions/upload-artifact@master
         with:
-          name: OpenWrt firmware
+          name: OpenWrt rpi3 firmware
           path: ./bin/targets/
 
       - name: Upload artifact packages
         uses: actions/upload-artifact@master
         with:
-          name: OpenWrt packages
+          name: OpenWrt rpi3 packages
           path: ./bin/packages/
