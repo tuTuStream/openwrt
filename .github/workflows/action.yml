@@ -36,10 +36,14 @@ jobs:
           git config --global user.email "36335130@qq.com"
           git config --global user.name "tuTuStream"
       - name: Load upstream commits
-        run : git pull https://github.com/iyuangang/openwrt.git --no-edit > ../STATUS.txt
+        run : |
+          git pull https://github.com/iyuangang/openwrt.git --no-edit > ../STATUS.txt
+          echo "$GITHUB_HEAD_REF $GITHUB_BASE_REF"
+          tail -1 ../STATUS.txt | awk '{print $1}'
         env:
           KEY_MARK: $(tail -1 ../STATUS.txt | awk '{print $1}')
         if: env.KEY_MARK != 'Already'
+        
     
       - name: Push Commits
         if: env.KEY_MARK != 'Already'
