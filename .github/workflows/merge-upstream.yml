@@ -10,7 +10,7 @@ name: Merge-upstream
 
 on:
   schedule:
-    - cron: 0/15 10 * * *
+    - cron: 0/5 10 * * *
     # - cron: 42 17 * * *
 
   # push:
@@ -39,8 +39,11 @@ jobs:
 
     - name: Load upstream commits
       run: git pull https://github.com/iyuangang/openwrt.git --no-edit
-
+    
     - name: Push Commits
       env:
         DOWNSTREAM_BRANCH: master
       run: git push origin $DOWNSTREAM_BRANCH
+      
+    - name: Test use my rpi actions
+      uses:  OpenWrt-1907 RaspberryPi3B+
