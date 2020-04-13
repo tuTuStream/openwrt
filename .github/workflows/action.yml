@@ -18,6 +18,8 @@ on:
   pull_request:
     branches:
       - master
+env:
+  UPSTREAM_CHANGED: false
 
 jobs:
   build:
@@ -36,14 +38,19 @@ jobs:
           git config --global user.email "36335130@qq.com"
           git config --global user.name "tuTuStream"
       - name: Load upstream commits
-        run: git pull https://github.com/iyuangang/openwrt.git --no-edit
+        run : git pull https://github.com/iyuangang/openwrt.git --no-edit > ../STATUS.txt
+        if  : tail -1 ../STATUS.txt | awk '{print $1}' != 'Already'
+        env:
+          UPSTREAM_CHANGED: true
     
       - name: Push Commits
+        if: env.UPSTREAM_CHANGED == 'true'
         env:
           DOWNSTREAM_BRANCH: master
         run: git push origin $DOWNSTREAM_BRANCH
 
       - name: Initialization environment
+        if: env.UPSTREAM_CHANGED == 'true'
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
@@ -71,6 +78,7 @@ jobs:
           sudo -E apt-get -y autoremove --purge
           sudo -E apt-get clean
       - name: Custome packages
+        if: env.UPSTREAM_CHANGED == 'true'
         run: |
           cd package
           mkdir openwrt-packages
@@ -80,10 +88,12 @@ jobs:
           # git clone https://github.com/rosywrt/luci-theme-rosy
           # git clone https://github.com/Ameykyl/luci-app-koolproxyR
       - name: Update feeds
+        if: env.UPSTREAM_CHANGED == 'true'
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
       - name: Costom configure file
+        if: env.UPSTREAM_CHANGED == 'true'
         run: |
           rm -f ./.config*
           touch ./.config
@@ -234,37 +244,44 @@ jobs:
           sed -i 's/^[ \t]*//g' ./.config
           make defconfig
       - name: Make download
+        if: env.UPSTREAM_CHANGED == 'true'
         run: |
           make download -j8
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
       - name: Compile firmware
+        if: env.UPSTREAM_CHANGED == 'true'
         run: DEBIAN_FRONTEND=noninteractive make -j$(nproc) || make -j1 V=s
 
       - name: Prepare artifact
+        if: env.UPSTREAM_CHANGED == 'true'
         run: |
           find ./bin/targets/ -type d -name "packages" | xargs rm -rf {}
           find ./bin/targets/ -type d -name "tar.gz" | xargs rm -rf {}
       
       - name: Upload artifact rpi3 firmware factory
+        if: env.UPSTREAM_CHANGED == 'true'
         uses: actions/upload-artifact@master
         with:
           name: OpenWrt rpi3 firmware factory image
           path: ./bin/targets/brcm2708/bcm2710/openwrt-brcm2708-bcm2710-rpi-3-ext4-factory.img.gz
 
       - name: Upload artifact rpi3 firmware sysupgrade
+        if: env.UPSTREAM_CHANGED == 'true'
         uses: actions/upload-artifact@master
         with:
           name: OpenWrt rpi3 firmware sysupgrade image
           path: ./bin/targets/brcm2708/bcm2710/openwrt-brcm2708-bcm2710-rpi-3-ext4-sysupgrade.img.gz
       
       - name: Upload artifact firmware
+        if: env.UPSTREAM_CHANGED == 'true'
         uses: actions/upload-artifact@master
         with:
           name: OpenWrt rpi3 firmware
           path: ./bin/targets/
 
       - name: Upload artifact packages
+        if: env.UPSTREAM_CHANGED == 'true'
         uses: actions/upload-artifact@master
         with:
           name: OpenWrt rpi3 packages
