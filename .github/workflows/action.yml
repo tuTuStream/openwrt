@@ -39,7 +39,9 @@ jobs:
         run : |
           git pull https://github.com/iyuangang/openwrt.git --no-edit > ../STATUS.txt
           echo -e "$GITHUB_HEAD_REF $GITHUB_BASE_REF"
+          echo "::set-env name=TEST::$(tail -1 ../STATUS.txt | awk '{print $1}')"
           tail -1 ../STATUS.txt | awk '{print $1}'
+          echo $TEST
         env:
           KEY_MARK: $(tail -1 ../STATUS.txt | awk '{print $1}')
         if: env.KEY_MARK != 'Already'
