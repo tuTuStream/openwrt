@@ -46,4 +46,4 @@ jobs:
       run: git push origin $DOWNSTREAM_BRANCH
       
     - name: Test use my rpi actions
-      uses:  OpenWrt-1907 RaspberryPi3B+
+      uses:  ./.github/workflows/rpi3bplus.yml
