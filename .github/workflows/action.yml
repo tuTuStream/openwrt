@@ -43,7 +43,7 @@ jobs:
           tail -1 ../STATUS.txt | awk '{print $1}'
           echo $TEST
         env:
-          KEY_MARK: $(tail -1 ../STATUS.txt | awk '{print $1}')
+          KEY_MARK: ${{tail -1 ../STATUS.txt | awk '{print $1}'}}
         if: env.KEY_MARK != 'Already'
         
     
