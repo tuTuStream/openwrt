@@ -44,7 +44,8 @@ jobs:
           tail -1 ../STATUS.txt | awk '{print $1}'
           echo $TEST
           if [ "$(tail -1 ../STATUS.txt | awk '{print $1}'" != "Already" ];then
-            echo "::set-output name=status::success"        
+            echo "::set-output name=status::success" 
+          fi
     
       - name: Push Commits
         if: steps.upstream.outputs.status == 'success'
