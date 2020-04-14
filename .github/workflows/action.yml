@@ -39,11 +39,7 @@ jobs:
         id  : upstream
         run : |
           git pull https://github.com/iyuangang/openwrt.git --no-edit > ../STATUS.txt
-          echo -e "$GITHUB_HEAD_REF $GITHUB_BASE_REF"
-          echo "::set-env name=TEST::$(tail -1 ../STATUS.txt | awk '{print $1}')"
-          tail -1 ../STATUS.txt | awk '{print $1}'
-          echo $TEST
-          if [ "$(tail -1 ../STATUS.txt | awk '{print $1}'" != "Already" ];then
+          if [ "$(tail -1 ../STATUS.txt | awk '{print $1}')" == "Already" ];then
             echo "::set-output name=status::success" 
             exit 0
           fi
