@@ -9,15 +9,15 @@ m = Map(shadowsocksr, translate("ShadowSocksR Plus+ Settings"))
 m:section(SimpleSection).template = "shadowsocksr/status"
 local server_table = {}
 uci:foreach(shadowsocksr, "servers", function(s)
-if s.alias then
-server_table[s[".name"]] = "[%s]:%s" %{string.upper(s.type), s.alias}
-elseif s.server and s.server_port then
-server_table[s[".name"]] = "[%s]:%s:%s" %{string.upper(s.type), s.server, s.server_port}
-end
+	if s.alias then
+		server_table[s[".name"]] = "[%s]:%s" %{string.upper(s.type), s.alias}
+	elseif s.server and s.server_port then
+		server_table[s[".name"]] = "[%s]:%s:%s" %{string.upper(s.type), s.server, s.server_port}
+	end
 end)
 local key_table = {}
 for key,_ in pairs(server_table) do
-table.insert(key_table,key)
+	table.insert(key_table,key)
 end
 table.sort(key_table)
 -- [[ Global Setting ]]--

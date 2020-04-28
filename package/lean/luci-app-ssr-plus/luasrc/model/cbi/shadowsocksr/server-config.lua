@@ -41,8 +41,8 @@ obfs = {
 m = Map(shadowsocksr, translate("Edit ShadowSocksR Server"))
 m.redirect = luci.dispatcher.build_url("admin/services/shadowsocksr/server")
 if m.uci:get(shadowsocksr, sid) ~= "server_config" then
-luci.http.redirect(m.redirect)
-return
+	luci.http.redirect(m.redirect)
+	return
 end
 -- [[ Server Setting ]]--
 s = m:section(NamedSection, sid, "server_config")
@@ -54,7 +54,7 @@ o.rmempty = false
 o = s:option(ListValue, "type", translate("Server Type"))
 o:value("socks5", translate("Socks5"))
 if nixio.fs.access("/usr/bin/ssr-server") then
-o:value("ssr", translate("ShadowsocksR"))
+	o:value("ssr", translate("ShadowsocksR"))
 end
 o.default = "socks5"
 o = s:option(Value, "server_port", translate("Server Port"))
